@@ -2,6 +2,7 @@
 import sys
 import time
 import datetime
+import inspect
 import pprint as pp
 
 # Import a library that comes pre-installed on the RPi.
@@ -45,73 +46,51 @@ for relay_GPIO_Num in relay_GPIO_NumLst:
                                                       initial_value=False ) )
 #############################################################################
 
-def relayOpen( parmLst ):
-
-    relay_ObjLst = parmLst[0]
-    gpioDic      = parmLst[1]
-    relayObjIdxs  = parmLst[2]
-
-    myLegalStrLst = ['1','2','3','4','5','6','7','8']
-
-    if relayObjIdxs == None:
-        relayObjIdxs = ['0']
-        while not all( el in myLegalStrLst for el in relayObjIdxs ):
-            relayObjIdxs = input(' relays -> ').split()
-            print(relayObjIdxs)
-    relays = [ relay_ObjLst[int(el)-1] for el in relayObjIdxs ]
-
-    for relay in relays:
-        gpioStr  = str(relay.pin)
-        pinNum   = gpioDic[gpioStr]['pin'] 
-        relayNum = gpioDic[gpioStr]['relay']
-    
-        print(' Opening relay {} ({:6} on pin {}).'.format(relayNum, gpioStr, pinNum))
-        relay.off()
-    return 0
-#############################################################################
-
-def relayClose( parmLst ):
+def relayOCT( parmLst ): # Relay Open/Close/Toggle
 
     relay_ObjLst = parmLst[0]
     gpioDic      = parmLst[1]
     relayObjIdxs = parmLst[2]
 
-    myLegalStrLst = ['1','2','3','4','5','6','7','8']
 
     if relayObjIdxs == None:
-        relayObjIdxs = ['0']
+        myLegalStrLst = ['1','2','3','4','5','6','7','8']
+        relayObjIdxs  = ['0']
         while not all( el in myLegalStrLst for el in relayObjIdxs ):
             relayObjIdxs = input(' relays -> ').split()
             print(relayObjIdxs)
     relays = [ relay_ObjLst[int(el)-1] for el in relayObjIdxs ]
 
+    whoCalledMeFuncNameStr = inspect.stack()[1][3]
     for relay in relays:
         gpioStr  = str(relay.pin)
         pinNum   = gpioDic[gpioStr]['pin'] 
         relayNum = gpioDic[gpioStr]['relay']
     
-        print(' Closing relay {} ({:6} on pin {}).'.format(relayNum, gpioStr, pinNum))
-        relay.on()
+        if whoCalledMeFuncNameStr == 'relayOpen':
+            print(' Opening relay {} ({:6} on pin {}).'.format(relayNum, gpioStr, pinNum))
+            relay.off()
+        if whoCalledMeFuncNameStr == 'relayClose':
+            print(' Closing relay {} ({:6} on pin {}).'.format(relayNum, gpioStr, pinNum))
+            relay.on()
+        if whoCalledMeFuncNameStr == 'relayToggle':
+            print(' Toggling relay {} ({:6} on pin {}).'.format(relayNum, gpioStr, pinNum))
+            relay.toggle()
+    return 0
+#############################################################################
+
+def relayOpen( parmLst ):
+    relayOCT( parmLst )
+    return 0
+#############################################################################
+
+def relayClose( parmLst ):
+    relayOCT( parmLst )
     return 0
 #############################################################################
 
 def relayToggle( parmLst ):
-
-    relay_ObjLst = parmLst[0]
-    gpioDic      = parmLst[1]
-    relayObjIdx  = parmLst[2]
-
-    if relayObjIdx == None:
-        while relayObjIdx not in ['1','2','3','4','5','6','7','8']:
-            relayObjIdx = input(' relay -> ')
-    relay = relay_ObjLst[int(relayObjIdx)-1]
-
-    gpioStr  = str(relay.pin)
-    pinNum   = gpioDic[gpioStr]['pin'] 
-    relayNum = gpioDic[gpioStr]['relay']
-
-    print(' Toggling relay {} ({:6} on pin {}).'.format(relayNum, gpioStr, pinNum))
-    relay.toggle()
+    relayOCT( parmLst )
     return 0
 #############################################################################
 
