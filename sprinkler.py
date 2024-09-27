@@ -45,40 +45,74 @@ for relay_GPIO_Num in relay_GPIO_NumLst:
                                                       initial_value=False ) )
 #############################################################################
 
-def relayClose( parmLst ):
-
-    relay_ObjLst = parmLst[0]
-    gpioDic      = parmLst[1]
-
-    r = 0
-    while r not in ['1','2','3','4','5','6','7','8']:
-        r = input(' relay -> ')
-    relay = relay_ObjLst[int(r)-1]
-
-    gpioStr  = str(relay.pin)
-    pinNum   = gpioDic[gpioStr]['pin'] 
-    relayNum = gpioDic[gpioStr]['relay']
-
-    print(' Closing relay {} ({:6} on pin {}).'.format(relayNum, gpioStr, pinNum))
-    relay.on()
-#############################################################################
-
 def relayOpen( parmLst ):
 
     relay_ObjLst = parmLst[0]
     gpioDic      = parmLst[1]
+    relayObjIdxs  = parmLst[2]
 
-    r = 0
-    while r not in ['1','2','3','4','5','6','7','8']:
-        r = input(' relay -> ')
-    relay = relay_ObjLst[int(r)-1]
+    myLegalStrLst = ['1','2','3','4','5','6','7','8']
+
+    if relayObjIdxs == None:
+        relayObjIdxs = ['0']
+        while not all( el in myLegalStrLst for el in relayObjIdxs ):
+            relayObjIdxs = input(' relays -> ').split()
+            print(relayObjIdxs)
+    relays = [ relay_ObjLst[int(el)-1] for el in relayObjIdxs ]
+
+    for relay in relays:
+        gpioStr  = str(relay.pin)
+        pinNum   = gpioDic[gpioStr]['pin'] 
+        relayNum = gpioDic[gpioStr]['relay']
+    
+        print(' Opening relay {} ({:6} on pin {}).'.format(relayNum, gpioStr, pinNum))
+        relay.off()
+    return 0
+#############################################################################
+
+def relayClose( parmLst ):
+
+    relay_ObjLst = parmLst[0]
+    gpioDic      = parmLst[1]
+    relayObjIdxs = parmLst[2]
+
+    myLegalStrLst = ['1','2','3','4','5','6','7','8']
+
+    if relayObjIdxs == None:
+        relayObjIdxs = ['0']
+        while not all( el in myLegalStrLst for el in relayObjIdxs ):
+            relayObjIdxs = input(' relays -> ').split()
+            print(relayObjIdxs)
+    relays = [ relay_ObjLst[int(el)-1] for el in relayObjIdxs ]
+
+    for relay in relays:
+        gpioStr  = str(relay.pin)
+        pinNum   = gpioDic[gpioStr]['pin'] 
+        relayNum = gpioDic[gpioStr]['relay']
+    
+        print(' Closing relay {} ({:6} on pin {}).'.format(relayNum, gpioStr, pinNum))
+        relay.on()
+    return 0
+#############################################################################
+
+def relayToggle( parmLst ):
+
+    relay_ObjLst = parmLst[0]
+    gpioDic      = parmLst[1]
+    relayObjIdx  = parmLst[2]
+
+    if relayObjIdx == None:
+        while relayObjIdx not in ['1','2','3','4','5','6','7','8']:
+            relayObjIdx = input(' relay -> ')
+    relay = relay_ObjLst[int(relayObjIdx)-1]
 
     gpioStr  = str(relay.pin)
     pinNum   = gpioDic[gpioStr]['pin'] 
     relayNum = gpioDic[gpioStr]['relay']
 
-    print(' Opening relay {} ({:6} on pin {}).'.format(relayNum, gpioStr, pinNum))
-    relay.off()
+    print(' Toggling relay {} ({:6} on pin {}).'.format(relayNum, gpioStr, pinNum))
+    relay.toggle()
+    return 0
 #############################################################################
 
 def relayCloseOpenContinuous( parmLst ):
@@ -103,25 +137,9 @@ def relayCloseOpenContinuous( parmLst ):
 
     except KeyboardInterrupt:
         pass
+    return 0
 #############################################################################
 
-def relayToggle( parmLst ):
-
-    relay_ObjLst = parmLst[0]
-    gpioDic      = parmLst[1]
-
-    r = 0
-    while r not in ['1','2','3','4','5','6','7','8']:
-        r = input(' relay -> ')
-    relay = relay_ObjLst[int(r)-1]
-
-    gpioStr  = str(relay.pin)
-    pinNum   = gpioDic[gpioStr]['pin'] 
-    relayNum = gpioDic[gpioStr]['relay']
-
-    print(' Toggling relay {} ({:6} on pin {}).'.format(relayNum, gpioStr, pinNum))
-    relay.toggle()
-#############################################################################
 
 def getTimeDate():
     now = datetime.datetime.now()
@@ -146,32 +164,13 @@ def getTimeDate():
     return year,month,day,hour,minute,second,dow
 #############################################################################
 
-def main_loop():
-    # start by turning all the relays off
-    for relay in relay_GPIOS_ObjLst:
-        set_relay(relay, False)
-    idx = 0
-    while 1:
-        relay = relay_GPIOS_ObjLst[idx]
-
-        set_relay(relay, True)
-        time.sleep(.75)
-
-        set_relay(relay, False)
-        time.sleep(.75)
-
-        idx += 1
-        if idx == len(relay_GPIOS_ObjLst):
-            idx = 0
-#############################################################################
-    
 if __name__ == "__main__":
     print(' Starting program ...')
 
     strToFunctDict = {
-    'ro'  : {'func': relayClose,     'parm': [relay_GPIOS_ObjLst,gpioDict], 'menu': ' Relay On    '},
-    'rf'  : {'func': relayOpen,      'parm': [relay_GPIOS_ObjLst,gpioDict], 'menu': ' Relay Off   '},
-    'rt'  : {'func': relayToggle,    'parm': [relay_GPIOS_ObjLst,gpioDict], 'menu': ' Relay Toggle'},
+    'ro'  : {'func': relayOpen,   'parm': [relay_GPIOS_ObjLst,gpioDict,None], 'menu': ' Relay Open  '},
+    'rc'  : {'func': relayClose,  'parm': [relay_GPIOS_ObjLst,gpioDict,None], 'menu': ' Relay Close '},
+    'rt'  : {'func': relayToggle, 'parm': [relay_GPIOS_ObjLst,gpioDict,None], 'menu': ' Relay Toggle'},
 
     'roc' : {'func': relayCloseOpenContinuous, 'parm': [relay_GPIOS_ObjLst,gpioDict], 'menu': ' Relays On/Off Cycle '},
     #'rtc' : {'func': toggle_relay, 'parm': [relay_GPIOS_ObjLst,gpioDict], 'menu': ' Relays Toggle Cycle '},
@@ -194,16 +193,7 @@ if __name__ == "__main__":
 
         elif choice == 'q':
             break
-    sys.exit(0)
 
-    # Get the current date and time
-    #year,month,day,hour,minute,second,dow = getTimeDate()
-    #
-    #try:
-    #    main_loop()
-    #except KeyboardInterrupt:
-    #    print()
-    #    for relay in relay_GPIOS_ObjLst:
-    #        set_relay(relay,False)
-    #    print('\n Exiting application. \n')
-    #    sys.exit(0)
+    relayOpen([relay_GPIOS_ObjLst,gpioDict,[1,2,3,4,5,6,7,8]])
+
+    print('\n Exiting application. \n')
