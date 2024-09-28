@@ -119,8 +119,7 @@ def relayCloseOpenContinuous( parmLst ):
     return 0
 #############################################################################
 
-
-def getTimeDate():
+def getTimeDate( parmLst ):
     now = datetime.datetime.now()
     pp.pprint(now)
 
@@ -132,13 +131,13 @@ def getTimeDate():
     second = now.second
     dow    = now.weekday() # Monday is 0.
 
-    print('year   {:4}, type {}'.format( year,   type(year  )))
-    print('month  {:4}, type {}'.format( month,  type(month )))
-    print('day    {:4}, type {}'.format( day,    type(day   )))
-    print('hour   {:4}, type {}'.format( hour,   type(hour  )))
-    print('minute {:4}, type {}'.format( minute, type(minute)))
-    print('second {:4}, type {}'.format( second, type(second)))
-    print('dow    {:4}, type {}'.format( dow,    type(dow   )))
+    print('year   {:4}'.format( year   ))
+    print('month  {:4}'.format( month  ))
+    print('day    {:4}'.format( day    ))
+    print('hour   {:4}'.format( hour   ))
+    print('minute {:4}'.format( minute ))
+    print('second {:4}'.format( second ))
+    print('dow    {:4}'.format( dow    ))
 
     return year,month,day,hour,minute,second,dow
 #############################################################################
@@ -150,9 +149,7 @@ if __name__ == "__main__":
     'ro'  : {'func': relayOpen,   'parm': [relay_GPIOS_ObjLst,gpioDict,None], 'menu': ' Relay Open  '},
     'rc'  : {'func': relayClose,  'parm': [relay_GPIOS_ObjLst,gpioDict,None], 'menu': ' Relay Close '},
     'rt'  : {'func': relayToggle, 'parm': [relay_GPIOS_ObjLst,gpioDict,None], 'menu': ' Relay Toggle'},
-
-    'roc' : {'func': relayCloseOpenContinuous, 'parm': [relay_GPIOS_ObjLst,gpioDict], 'menu': ' Relays On/Off Cycle '},
-    #'rtc' : {'func': toggle_relay, 'parm': [relay_GPIOS_ObjLst,gpioDict], 'menu': ' Relays Toggle Cycle '},
+    'gt'  : {'func': getTimeDate, 'parm': None,                               'menu': ' Get   Time'},
     }
 
     while(1):
