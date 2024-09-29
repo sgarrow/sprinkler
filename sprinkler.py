@@ -4,6 +4,7 @@ import time
 import datetime
 import inspect
 import pprint as pp
+import pickle
 
 # Import a library that comes pre-installed on the RPi.
 # It's nonstandard - not part of a standard python installation
@@ -171,5 +172,10 @@ if __name__ == "__main__":
             break
 
     relayOpen([relay_GPIOS_ObjLst,gpioDict,[1,2,3,4,5,6,7,8]])
+
+    with open('schedDict.pickle', 'rb') as handle:
+        schedDict = pickle.load(handle)
+
+    pp.pprint(schedDict)
 
     print('\n Exiting application. \n')

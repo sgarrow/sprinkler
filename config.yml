@@ -1,0 +1,50 @@
+
+# This file defines the watering shedule.
+# No tab characters allowed - use only spaces.
+# Note that Days and Times are capitalized, durations is not.
+# This is so when the resulting dictionary is printed it gets printed
+# in Days, Times, durations order (alphbetically, caps sort berfore lowers).
+# This file is parsed by the script mkSchedDict.py which makes a dictionary
+# named schedDict. schedDict is then saved to a file which is in turn loaded
+# and used by the main script (sprinkler.py) which actullay controls the 
+# relays (sprinkler valves).
+
+relay1:
+  Days: even    # Legal values: even, odd, all, list of specific days.
+
+  Times:        # Time(s) of day the relay will close.
+    - 910       # 24-hour military time format HHMM or HMM.
+    - 1030      # No leading zeros. 
+    - 1105
+
+  durations:
+    - 1         # How long the relay will be closed. Units = minutes.
+    - 2         # Decimals ok, i.e. 1.5 = 90 seconds. 
+    - 3         # Number of 'Times' must equal number of 'durations'. 
+
+relay2:
+  Days: odd
+  Times:
+    - 1200
+    - 1300
+  durations:
+    - 4
+    - 5
+
+relay3:
+  Days: all
+  Times:
+    - 1400
+  durations:
+    - 6
+
+relay4:
+  Days:
+    - Monday
+    - Friday
+  Times:
+    - 1500
+    - 1600
+  durations:
+    - 7
+    - 8
