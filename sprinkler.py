@@ -150,7 +150,11 @@ def setActiveProfile( ap ):
     return ap
 #############################################################################
 
-def runActiveProfile( apDict ):
+def runActiveProfile( parmLst ):
+
+    relay_ObjLst = parmLst[0] # For access to relay methods.
+    gpioDic      = parmLst[1] # For print Statements (pin, gpio, .. )
+    apDict       = parmLst[2] # Dates/Times for relays on.
 
     print(' Running Profile')
     for relay,data in apDict.items():
@@ -161,7 +165,14 @@ def runActiveProfile( apDict ):
 
     try:
         while 1:
-            getTimeDate(None)
+            for relay,data in apDict.items():
+                relayNum = int(relay[:-1])
+                closeRelay([rlyGPIoObjLst,gpioDict,[relayNum]])
+                time.sleep(2)
+                openRelay([rlyGPIoObjLst,gpioDict,[relayNum]])
+
+
+            #getTimeDate(None)
             time.sleep(10)
 
     except KeyboardInterrupt:
@@ -205,18 +216,18 @@ if __name__ == "__main__":
     #pp.pprint(profDict[actProfile])
 
     strToFunctDict = {
-    'or'  : {'func': openRelay,        'parm': [rlyGPIoObjLst,gpioDict,None],   'menu': ' Open    Relay   '},
-    'cr'  : {'func': closeRelay,       'parm': [rlyGPIoObjLst,gpioDict,None],   'menu': ' Close   Relay   '},
-    'tr'  : {'func': toggleRelay,      'parm': [rlyGPIoObjLst,gpioDict,None],   'menu': ' Toggle  Relay   '},
-    'rr'  : {'func': readRelay,        'parm': [rlyGPIoObjLst,gpioDict,None],   'menu': ' Read    Relay   '},
-    'cycr': {'func': cycleRelays,      'parm': [rlyGPIoObjLst,gpioDict,None],   'menu': ' Cycle   Relays  '},
+    'or'  : {'func': openRelay,        'parm': [rlyGPIoObjLst,gpioDict,None],               'menu': ' Open    Relay   '},
+    'cr'  : {'func': closeRelay,       'parm': [rlyGPIoObjLst,gpioDict,None],               'menu': ' Close   Relay   '},
+    'tr'  : {'func': toggleRelay,      'parm': [rlyGPIoObjLst,gpioDict,None],               'menu': ' Toggle  Relay   '},
+    'rr'  : {'func': readRelay,        'parm': [rlyGPIoObjLst,gpioDict,None],               'menu': ' Read    Relay   '},
+    'cycr': {'func': cycleRelays,      'parm': [rlyGPIoObjLst,gpioDict,None],               'menu': ' Cycle   Relays  '},
                                                                                    
-    'gt'  : {'func': getTimeDate,      'parm': None,                            'menu': ' Get     Time    '},
+    'gt'  : {'func': getTimeDate,      'parm': None,                                        'menu': ' Get     Time    '},
 
-    'lp'  : {'func': listProfiles,     'parm': profDict,                        'menu': ' List    Profiles'},
-    'gap' : {'func': getActiveProfile, 'parm': actProfile,                      'menu': ' Get Act Profile '},
-    'sap' : {'func': setActiveProfile, 'parm': actProfile,                      'menu': ' Set Act Profile '},
-    'rap' : {'func': runActiveProfile, 'parm': profDict[actProfile],            'menu': ' Run Act Profile '},
+    'lp'  : {'func': listProfiles,     'parm': profDict,                                    'menu': ' List    Profiles'},
+    'gap' : {'func': getActiveProfile, 'parm': actProfile,                                  'menu': ' Get Act Profile '},
+    'sap' : {'func': setActiveProfile, 'parm': actProfile,                                  'menu': ' Set Act Profile '},
+    'rap' : {'func': runActiveProfile, 'parm': profDict[rlyGPIoObjLst,gpioDict,actProfile], 'menu': ' Run Act Profile '},
     }
 
     while(1):
