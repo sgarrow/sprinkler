@@ -202,24 +202,38 @@ def runActiveProfile( parmLst ):
                 onDays    = data['Days']
                 onTimes   = data['Times']
                 durations = data['durations'] 
-                print()
-                print(onDays, onTimes, durations)
+                print(relay, onDays, onTimes, durations)
 
-                closeOpen = False
+                dayMatch = False
                 if 'all' in onDays                        or \
                 'even' in onDays and currDT['day']%2 == 0 or \
                 'odd'  in onDays and currDT['day']%2 == 1 or \
                 currDT['dowStr'] in onDays:
-                    print( 'day match on all or even or all or dow')
-                    closeOpen = True
+                    dayMatch = True
+                print( ' day match  = ', dayMatch)
 
-                if closeOpen:
+                inOnWindow = False
+                if dayMatch:
+                    for t,d in zip(onTimes,durations):
+                        onTime = datetime.datetime(
+                            currDT['year'],     currDT['month'],    currDT['day'],
+                            t//100, t%100, 0)
+                        offTime = onTime + datetime.timedelta(seconds=d)
+                        print(' onTime     = ', onTime)
+                        print(' now        = ', currDT['now'])
+                        print(' offTime    = ', offTime)
+
+                        if onTime <= currDT['now'] <= offTime:
+                            inOnWindow = True
+                print(' inOnWindow = ', inOnWindow)
+
+                if inOnWindow:
                     closeRelay([rlyGPIoObjLst,gpioDict,[relayNum]])
-                    time.sleep(1)
+                else:
                     openRelay([rlyGPIoObjLst,gpioDict,[relayNum]])
+                print()
 
-
-            time.sleep(10)
+            time.sleep(1)
 
     except KeyboardInterrupt:
         return
@@ -239,6 +253,7 @@ def getTimeDate( parmLst ):
     dowNum = now.weekday() # Monday is 0.
     dowStr = dowStrLst[dowNum]
 
+    print(now)
     print()
     print(' year   {:4}'.format( year   ), end = '')
     print(' month  {:4}'.format( month  ), end = '')
@@ -251,7 +266,8 @@ def getTimeDate( parmLst ):
 
     rtnDict = {'year':   year,   'month':  month,  'day':   day,
                'hour':   hour,   'minute': minute, 'second':second,
-               'dowNum': dowNum, 'dowStr': dowStr}
+               'dowNum': dowNum, 'dowStr': dowStr,
+               'now':    now}
 
 
     return rtnDict
