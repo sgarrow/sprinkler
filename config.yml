@@ -9,9 +9,11 @@
 # relays (sprinkler valves).
 
 profile1:
-
+  active:
+    True
   relay1:
-    Days: even    # Legal values: even, odd, all, list of specific days.
+    Days:
+      - even    # Legal values: even, odd, all, list of specific days.
   
     Times:        # Time(s) of day the relay will close.
       - 910       # 24-hour military time format HHMM or HMM.
@@ -24,7 +26,8 @@ profile1:
       - 3         # Number of 'Times' must equal number of 'durations'. 
 
   relay2:
-    Days: odd
+    Days:
+      - odd
     Times:
       - 1200
       - 1300
@@ -33,7 +36,8 @@ profile1:
       - 5
 
   relay3:
-    Days: all
+    Days:
+      - all
     Times:
       - 1400
     durations:
@@ -51,9 +55,11 @@ profile1:
       - 8
 
 profile2:
-
+  active:
+    False
   relay1:
-    Days: odd
+    Days:
+      - odd
   
     Times:
       - 1105
@@ -66,7 +72,8 @@ profile2:
       - 6
 
   relay2:
-    Days: even
+    Days:
+      - even
     Times:
       - 1300
       - 1200
@@ -77,6 +84,7 @@ profile2:
   relay3:
     Days:    
       - Monday
+      - Wednesday
       - Friday
     Times:
       - 1433
@@ -84,11 +92,11 @@ profile2:
       - 3
 
   relay4:
-    Days: all
+    Days:
+      - all
     Times:
       - 1600
       - 1500
     durations:
       - 2
       - 1
-

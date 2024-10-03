@@ -13,18 +13,4 @@ with open('schedDict.pickle', 'wb') as handle:
 with open('schedDict.pickle', 'rb') as handle:
     sd = pickle.load(handle)
 
-#pp.pprint(sd)
-
-print(len(sd))
-for profile,sched in sd.items():
-    print('',profile)
-    for relay,data in sched.items():
-        print('  ', relay)
-        print('     Days: {}, Times: {}, Durations: {}'.\
-            format(data['Days'], data['Times'], data['durations']))
-    print()
-
-
-
-
-
+pp.pprint(sd)
