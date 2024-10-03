@@ -205,29 +205,14 @@ def runActiveProfile( parmLst ):
                 print()
                 print(onDays, onTimes, durations)
 
-                if 'all' in onDays                           or \
-                'even' in onDays and currDT['day']%2 == 0:   or \
-                'odd'  in onDays and currDT['day']%2 == 1:   or \
+                closeOpen = False
+                if 'all' in onDays                        or \
+                'even' in onDays and currDT['day']%2 == 0 or \
+                'odd'  in onDays and currDT['day']%2 == 1 or \
                 currDT['dowStr'] in onDays:
                     print( 'day match on all or even or all or dow')
                     closeOpen = True
 
-
-
-                #closeOpen = False
-                #if 'all' in onDays:
-                #    print( 'day match, all')
-                #    matchOnDays = True
-                #if 'even' in onDays and currDT['day']%2 == 0:
-                #    print( 'day match, even')
-                #    closeOpen = True
-                #if 'odd'  in onDays and currDT['day']%2 == 1:
-                #    print( 'day match, odd')
-                #    closeOpen = True
-                #if currDT['dowStr'] in onDays:
-                #    print( 'day match, dowStr')
-                #    closeOpen = True
-                #
                 if closeOpen:
                     closeRelay([rlyGPIoObjLst,gpioDict,[relayNum]])
                     time.sleep(1)
