@@ -72,7 +72,7 @@ def cycleRelays( parmLst ):
                 pinNum   = gpioDic[gpioStr]['pin'] 
                 relayNum = gpioDic[gpioStr]['relay']
             
-                rtnVal = closeRelay( [relay_ObjLst,  gpioDic, [ii+1]])
+                rtnVal = closeRelay([relay_ObjLst,  gpioDic, [ii+1]])
                 time.sleep(1)
                 rtnVal = openRelay( [relay_ObjLst,  gpioDic, [ii+1]])
                 time.sleep(1)

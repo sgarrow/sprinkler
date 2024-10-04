@@ -15,7 +15,8 @@ def getTimeDate( parmLst, prnEn = True ):
     dowStr = dowStrLst[dowNum]
 
     if prnEn:
-        print(now)
+        print()
+        print('',now)
         print()
         print(' year   {:4}'.format( year   ), end = '')
         print(' month  {:4}'.format( month  ), end = '')
