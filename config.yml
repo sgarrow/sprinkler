@@ -13,7 +13,7 @@ profile1:
     True
   relay1:
     Days:
-      - even    # Legal values: even, odd, all, list of specific days.
+      - even      # Legal values: even, odd, all, list-of-specific-days.
   
     Times:        # Time(s) of day the relay will close.
       - 910       # 24-hour military time format HHMM or HMM.
@@ -28,12 +28,12 @@ profile1:
   relay2:
     Days:
       - odd
-    Times:
-      - 1200
-      - 1315
+    Times:        # These periods overlap, that's ok.
+      - 1828      # Handled as on @ 1700 off at 1703.
+      - 1828      # Relay will not glitch.
     durations:
-      - 4
-      - 5
+      - .5
+      - 1
 
   relay3:
     Days:

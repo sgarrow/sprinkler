@@ -47,18 +47,18 @@ for relay_GPIO_Num in relay_GPIO_NumLst:
                                                       initial_value=False ) )
 #############################################################################
 
-def relayOCTR( parmLst ): # Relay Open/Close/Toggle/Read
+def relayOCTR( parmLst ): # Relay Open/Close/Toggle/Read Driver Function.
 
     relay_ObjLst = parmLst[0]
     gpioDic      = parmLst[1]
     relayObjIdxs = parmLst[2]
+    rtnVal = None
 
     if relayObjIdxs == None:
         myLegalStrLst = ['1','2','3','4','5','6','7','8']
         relayObjIdxs  = ['0']
         while not all( el in myLegalStrLst for el in relayObjIdxs ):
             relayObjIdxs = input(' relays -> ').split()
-            #print(relayObjIdxs)
     relays = [ relay_ObjLst[int(el)-1] for el in relayObjIdxs ]
 
     whoCalledMeFuncNameStr = inspect.stack()[1][3]
@@ -77,57 +77,55 @@ def relayOCTR( parmLst ): # Relay Open/Close/Toggle/Read
             print(' Toggling relay {} ({:6} on pin {}).'.format(relayNum, gpioStr, pinNum))
             relay.toggle()
         if whoCalledMeFuncNameStr == 'readRelay':
-            rvStr = 'open'
+            rtnVal = 'open'
             rv = relay.value
             if rv == 1:
-                rvStr = 'closed'
-            print(' Reading relay {} ({:6} on pin {}) is {}.'.format(relayNum, gpioStr, pinNum, rvStr))
-    return 0
+                rtnVal = 'closed'
+            print(' Reading relay {} ({:6} on pin {}) is {}.'.format(relayNum, gpioStr, pinNum, rtnVal))
+    return rtnVal
 #############################################################################
 
-def openRelay( parmLst ):
-    relayOCTR( parmLst )
-    return 0
+def openRelay( parmLst ):   # Wrapper function.
+    rtnVal = relayOCTR( parmLst )
+    return rtnVal
 #############################################################################
 
-def closeRelay( parmLst ):
-    relayOCTR( parmLst )
-    return 0
+def closeRelay( parmLst ):  # Wrapper function. 
+    rtnVal = relayOCTR( parmLst )
+    return rtnVal
 #############################################################################
 
-def toggleRelay( parmLst ):
-    relayOCTR( parmLst )
-    return 0
+def toggleRelay( parmLst ): # Wrapper function. 
+    rtnVal = relayOCTR( parmLst )
+    return rtnVal
 #############################################################################
 
-def readRelay( parmLst ):
-    relayOCTR( parmLst )
-    return 0
+def readRelay( parmLst ):   # Wrapper function. 
+    rtnVal = relayOCTR( parmLst )
+    return rtnVal
 #############################################################################
 
 def cycleRelays( parmLst ):
 
     relay_ObjLst = parmLst[0]
     gpioDic      = parmLst[1]
-
+    rtnVal = 0
     try:
         while(1):
-            for relay in relay_ObjLst:
+            for ii,relay in enumerate(relay_ObjLst):
         
                 gpioStr  = str(relay.pin)
                 pinNum   = gpioDic[gpioStr]['pin'] 
                 relayNum = gpioDic[gpioStr]['relay']
             
-                print(' Closing relay {} ({:6} on pin {}).'.format(relayNum, gpioStr, pinNum))
-                relay.on()
+                rtnVal = closeRelay( [relay_ObjLst,  gpioDic, [ii+1]])
                 time.sleep(1)
-                print(' Opening relay {} ({:6} on pin {}).'.format(relayNum, gpioStr, pinNum))
-                relay.off()
+                rtnVal = openRelay( [relay_ObjLst,  gpioDic, [ii+1]])
                 time.sleep(1)
 
     except KeyboardInterrupt:
         pass
-    return 0
+    return rtnVal
 #############################################################################
 def listProfiles( pDict ):
     print()
@@ -150,7 +148,6 @@ def getActiveProfile( pDict ):
     for profileKey,profileValue in pDict.items():
         for profKey,profValue in profileValue.items():
             if profKey == 'active':
-                #print(profileKey,profKey,profValue)
                 if profValue:
                     ap = profileKey
                     break
@@ -169,7 +166,6 @@ def setActiveProfile( pDict ):
     for profileKey,profileValue in pDict.items():
         for profKey,profValue in profileValue.items():
             if profKey == 'active':
-                #print(profileKey,profKey,profValue)
                 if profileKey == ap:
                     pDict[profileKey]['active'] = True
                 else:
@@ -183,17 +179,16 @@ def runActiveProfile( parmLst ):
     relay_ObjLst = parmLst[0] # For access to relay methods.
     gpioDic      = parmLst[1] # For print Statements (pin, gpio, .. )
     pDict        = parmLst[2] # profile dict
-
+    rtnVal = 0
     dowStrLst = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']
     apName = getActiveProfile( pDict )
     apDict = pDict[apName]
-    #print('ap = ',apDict)
     print(' Running Profile')
 
     try:
         while 1:
 
-            currDT = getTimeDate(None)
+            currDT = getTimeDate(None, False)
 
             for relay,data in apDict.items():
                 if relay == 'active':
@@ -216,9 +211,9 @@ def runActiveProfile( parmLst ):
                 if dayMatch:
                     for t,d in zip(onTimes,durations):
                         onTime = datetime.datetime(
-                            currDT['year'],     currDT['month'],    currDT['day'],
+                            currDT['year'], currDT['month'], currDT['day'], 
                             t//100, t%100, 0)
-                        offTime = onTime + datetime.timedelta(seconds=d)
+                        offTime = onTime + datetime.timedelta(seconds = d*60)
                         print(' onTime     = ', onTime)
                         print(' now        = ', currDT['now'])
                         print(' offTime    = ', offTime)
@@ -228,18 +223,22 @@ def runActiveProfile( parmLst ):
                 print(' inOnWindow = ', inOnWindow)
 
                 if inOnWindow:
-                    closeRelay([rlyGPIoObjLst,gpioDict,[relayNum]])
+                    relayState = readRelay([rlyGPIoObjLst,gpioDict,[relayNum]])
+                    if relayState == 'open':
+                        rtnVal = closeRelay([rlyGPIoObjLst,gpioDict,[relayNum]] )
                 else:
-                    openRelay([rlyGPIoObjLst,gpioDict,[relayNum]])
+                    relayState = readRelay([rlyGPIoObjLst,gpioDict,[relayNum]])
+                    if relayState == 'closed':
+                        rtnVal = openRelay( [rlyGPIoObjLst,gpioDict,[relayNum]] )
                 print()
 
-            time.sleep(1)
+            time.sleep(2)
 
     except KeyboardInterrupt:
-        return
+        return rtnVal
 #############################################################################
 
-def getTimeDate( parmLst ):
+def getTimeDate( parmLst, prnEn = True ):
     now = datetime.datetime.now()
 
     dowStrLst = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']
@@ -253,16 +252,17 @@ def getTimeDate( parmLst ):
     dowNum = now.weekday() # Monday is 0.
     dowStr = dowStrLst[dowNum]
 
-    print(now)
-    print()
-    print(' year   {:4}'.format( year   ), end = '')
-    print(' month  {:4}'.format( month  ), end = '')
-    print(' day    {:4}'.format( day    ))
-    print(' hour   {:4}'.format( hour   ), end = '')
-    print(' minute {:4}'.format( minute ), end = '')
-    print(' second {:4}'.format( second ))
-    print(' dow    {:4} ({})'.format( dowNum, dowStr ))
-    print()
+    if prnEn:
+        print(now)
+        print()
+        print(' year   {:4}'.format( year   ), end = '')
+        print(' month  {:4}'.format( month  ), end = '')
+        print(' day    {:4}'.format( day    ))
+        print(' hour   {:4}'.format( hour   ), end = '')
+        print(' minute {:4}'.format( minute ), end = '')
+        print(' second {:4}'.format( second ))
+        print(' dow    {:4} ({})'.format( dowNum, dowStr ))
+        print()
 
     rtnDict = {'year':   year,   'month':  month,  'day':   day,
                'hour':   hour,   'minute': minute, 'second':second,
@@ -280,18 +280,18 @@ if __name__ == "__main__":
         profDict = pickle.load(handle)
 
     strToFunctDict = {
-    'or'  : {'func': openRelay,        'parm': [rlyGPIoObjLst,gpioDict,None],     'menu': ' Open    Relay   '},
-    'cr'  : {'func': closeRelay,       'parm': [rlyGPIoObjLst,gpioDict,None],     'menu': ' Close   Relay   '},
-    'tr'  : {'func': toggleRelay,      'parm': [rlyGPIoObjLst,gpioDict,None],     'menu': ' Toggle  Relay   '},
-    'rr'  : {'func': readRelay,        'parm': [rlyGPIoObjLst,gpioDict,None],     'menu': ' Read    Relay   '},
-    'cycr': {'func': cycleRelays,      'parm': [rlyGPIoObjLst,gpioDict,None],     'menu': ' Cycle   Relays  '},
+    'or'  : {'func': openRelay,        'parm': [rlyGPIoObjLst,gpioDict,None],     'menu': ' Open    Relay      '},
+    'cr'  : {'func': closeRelay,       'parm': [rlyGPIoObjLst,gpioDict,None],     'menu': ' Close   Relay      '},
+    'tr'  : {'func': toggleRelay,      'parm': [rlyGPIoObjLst,gpioDict,None],     'menu': ' Toggle  Relay      '},
+    'rr'  : {'func': readRelay,        'parm': [rlyGPIoObjLst,gpioDict,None],     'menu': ' Read    Relay      '},
+    'cycr': {'func': cycleRelays,      'parm': [rlyGPIoObjLst,gpioDict,None],     'menu': ' Cycle   Relays \n  '},
 
-    'lp'  : {'func': listProfiles,     'parm': profDict,                          'menu': ' List    Profiles'},
-    'gap' : {'func': getActiveProfile, 'parm': profDict,                          'menu': ' Get Act Profile '},
-    'sap' : {'func': setActiveProfile, 'parm': profDict,                          'menu': ' Set Act Profile '},
-    'rap' : {'func': runActiveProfile, 'parm': [rlyGPIoObjLst,gpioDict,profDict], 'menu': ' Run Act Profile '},
+    'lp'  : {'func': listProfiles,     'parm': profDict,                          'menu': ' List    Profiles   '},
+    'gap' : {'func': getActiveProfile, 'parm': profDict,                          'menu': ' Get Act Profile    '},
+    'sap' : {'func': setActiveProfile, 'parm': profDict,                          'menu': ' Set Act Profile    '},
+    'rap' : {'func': runActiveProfile, 'parm': [rlyGPIoObjLst,gpioDict,profDict], 'menu': ' Run Act Profile \n '},
 
-    'gt'  : {'func': getTimeDate,      'parm': None,                              'menu': ' Get     Time    '},
+    'gt'  : {'func': getTimeDate,      'parm': None,                              'menu': ' Get     Time       '},
     }
 
     while(1):
@@ -311,6 +311,6 @@ if __name__ == "__main__":
         elif choice == 'q':
             break
 
-    openRelay([rlyGPIoObjLst,gpioDict,[1,2,3,4,5,6,7,8]])
+    rtnVal = openRelay([rlyGPIoObjLst,gpioDict,[1,2,3,4,5,6,7,8]])
 
     print('\n Exiting application. \n')
