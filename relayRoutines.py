@@ -1,14 +1,27 @@
+'''
+This module contains all the functions that talk directly to the relays.
+This is the only module that talks directly to the relays.
+
+This module has 6 functions 5 of which are callable directly from the prompt.
+Commands or,cr,tr,rr,cycr call functions openRelay, closeRelay, toggleRelay, 
+readRelay, respectively.
+
+The 6th function (relayOCTR) is a driver for or,cr,tr,rr.  Those 4 functions
+(openRelay, closeRelay, toggleRelay, readRelay) are just thin wrappers to 
+relayOCTR.
+'''
+
 import inspect
 import time
 
 def relayOCTR( parmLst ): # Relay Open/Close/Toggle/Read Driver Function.
 
-    relay_ObjLst = parmLst[0]
-    gpioDic      = parmLst[1]
-    relayObjIdxs = parmLst[2]
+    relay_ObjLst = parmLst[0] # This was created by function in file init.py
+    gpioDic      = parmLst[1] # Also from init.py, refer to comments therein.
+    relayObjIdxs = parmLst[2] # A list of relays to perform the action on.
     rtnVal = None
 
-    if relayObjIdxs == None:
+    if relayObjIdxs == None:  # If the passed in list is empty, prompt user.
         myLegalStrLst = ['1','2','3','4','5','6','7','8']
         relayObjIdxs  = ['0']
         while not all( el in myLegalStrLst for el in relayObjIdxs ):
