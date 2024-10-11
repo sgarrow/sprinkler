@@ -3,7 +3,7 @@
 # Note that Days and Times are capitalized, durations is not.
 # This is so when the resulting dictionary is printed it gets printed
 # in Days, Times, durations order (alphbetically, caps sort berfore lowers).
-# This file is parsed by the script mkSchedDict.py which makes a dictionary
+# This file is parsed by the function makeProfile which makes a dictionary
 # named schedDict. schedDict is then saved to a file which is in turn loaded
 # and used by the main script (sprinkler.py) which actullay controls the 
 # relays (sprinkler valves).

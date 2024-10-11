@@ -1,3 +1,21 @@
+''' 
+This is the main script for the sprinkler project.
+To run it from the RPi command line type "python3 sprinkler.py".
+This project (collection of files/scripts) cannot be run on a PC, 
+it has to be run on an RPi.
+
+Every file in this project has comments like this at the top.
+Comments like this (enclosed by three single quotes are called "doc-strings".
+doc-strings are like comments but ... different. Comments are proceeded by #.
+
+The recommend way to learn about this project is to read the comments at the
+top of the files in this order:
+  initRoutines.py, timeRoutines.py, relayRoutines.py, 
+  profileRoutines.py, config.yml.
+
+After reading the doc-strings perusing the comments will also be helpful.
+'''
+
 # Import a standard python libraries.
 import pickle
 

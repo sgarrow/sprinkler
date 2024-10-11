@@ -1,3 +1,43 @@
+'''
+This module contains all the functions that deal with profiles.
+A profile is a sprinkler schedule: valve, days, times, durations, etc.
+
+Profiles are defined in the file config.yml.  config.yml is just a text file
+but it is in specific format that is parseable by the python module named
+'yaml' (yet another mark up language ... sort of like xml files).
+config.yml can be edited on a PC and can contain multiple profiles.
+
+This module has 5 funcs all of which are callable directly from the prompt.
+
+Command mp: Calls function makeProfile.
+            This function reads config.yml and converts the text therein into
+            a python "dictionary" (a dictionary is directly useable by the 
+            python programming language whereas the text file itself 
+            (config.yml) is not.  The resulting dictionary is saved to a 
+            binary file named schedDict.pickle.
+
+            schedDict.pickle is loaded automatically when the main script 
+            (sprinkler.py) is started (from the RPi command line).
+
+            Note: It's easier to edit config.yml on a PC.  To then make the
+            pickle file on the PC type "python profileRoutines.py" at a 
+            PC command prompt.
+
+Command lp: Calls function listProfiles.
+            This function prints the profiles (the data in the dictionary 
+            loaded at start up as described above.
+         
+Command gap: Calls function getActiveProfile.
+             This function prints the name of the active profile - 
+             the profile that will be run when the rp command is entered.
+             
+Command sap: Calls function setActiveProfile.
+
+Command rap: Calls function runActiveProfile.
+             This function is an infinite loop.  The loop can be exited with
+             ctrl-c.  Upon exit a return to the command prompt occurs.
+'''
+
 import pprint        as pp
 import datetime      as dt
 import relayRoutines as rr
@@ -5,6 +45,7 @@ import timeRoutines  as tr
 import pickle
 import time
 import yaml
+#############################################################################
 
 def makeProfile( prmLst ):
     with open('config.yml', 'r') as file:
@@ -131,4 +172,8 @@ def runActiveProfile( parmLst ):
     except KeyboardInterrupt:
         return rtnVal
 #############################################################################
+
+if __name__ == "__main__":
+    makeProfile( None )
+
 

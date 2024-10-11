@@ -1,10 +1,21 @@
 '''
-Create (1) a list of gpiozero relay-objects and (2) a dictionary of GPIO to
-board-pin and associated relay it is wired to. These items are returned.
+The only function in this file is named "init".  It is called automatically
+when the main script (sprinkler.py) is started (from the command line).
+
+The init routine creates two things:
+
+   (1) a list of relay-objects, one obj for each relay.  Each object contains
+       "methods" for the associated relay, i.e., "on", "off" and "pin".
+
+   (2) a cross reference dictionary of GPIO to board-pin and associated 
+       relay it is wired to. 
+
+These two items are returned to the main scrips who, in turn passes them to 
+other functions who need them (those functions are in file relayRoutines.py).
 
 Relay-objs have methods on,off,pin to close,open,get-GPIO-name, respectively.
-The returned dictionary is just used to make the print statements more 
-meaningfull, other than that there is no real functionality.
+The dictionary is just used to make the print statements more meaningfull, 
+other than that there is no real functionality.
 '''
 
 # Import a library that comes pre-installed on the RPi. It's nonstandard - 
