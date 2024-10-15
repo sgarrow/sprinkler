@@ -8,9 +8,28 @@
 # and used by the main script (sprinkler.py) which actullay controls the 
 # relays (sprinkler valves).
 
+############################################
 profile1:
   active:
     True
+  relay1:
+    Days:
+      - all
+  
+    Times:
+      - 800
+      - 1000
+      - 1700
+  
+    durations:
+      - 1
+      - 1
+      - 1
+
+############################################
+profile2:
+  active:
+    False
   relay1:
     Days:
       - even      # Legal values: even, odd, all, list-of-specific-days.
@@ -53,8 +72,8 @@ profile1:
     durations:
       - 7
       - 8
-
-profile2:
+############################################
+profile3:
   active:
     False
   relay1:
@@ -100,3 +119,5 @@ profile2:
     durations:
       - 2
       - 1
+############################################
+

@@ -5,11 +5,11 @@ This project (collection of files/scripts) cannot be run on a PC,
 it has to be run on an RPi.
 
 Every file in this project has comments like this at the top.
-Comments like this (enclosed by three single quotes are called "doc-strings".
+Comments like this (enclosed by three single quotes) are called doc-strings.
 doc-strings are like comments but ... different. Comments are proceeded by #.
 
-The recommend way to learn about this project is to read the comments at the
-top of the files in this order:
+The recommended way to learn about this project is to read the comments at 
+the top of the files in this order:
   initRoutines.py, timeRoutines.py, relayRoutines.py, 
   profileRoutines.py, config.yml.
 
@@ -24,11 +24,14 @@ import initRoutines    as ir
 import timeRoutines    as tr
 import relayRoutines   as rr
 import profileRoutines as pr
+import utilRoutines    as ur
 #############################################################################
 
 if __name__ == "__main__":
 
     print(' Starting program ...\n')
+    ur.getVer(None)
+    ur.getTemp(None)
 
     gpioDict, rlyGPIoObjLst = ir.init()
 
@@ -42,17 +45,19 @@ if __name__ == "__main__":
     'rr'  : {'func': rr.readRelay,        'parm': [rlyGPIoObjLst,gpioDict,None],     'menu': ' Read    Relay      '},
     'cycr': {'func': rr.cycleRelays,      'parm': [rlyGPIoObjLst,gpioDict,None],     'menu': ' Cycle   Relays \n  '},
 
-    'mp'  : {'func': pr.makeProfile,      'parm': None,                              'menu': ' List    Profiles   '},
+    'mp'  : {'func': pr.makeProfile,      'parm': None,                              'menu': ' Make    Profiles   '},
     'lp'  : {'func': pr.listProfiles,     'parm': profDict,                          'menu': ' List    Profiles   '},
     'gap' : {'func': pr.getActiveProfile, 'parm': profDict,                          'menu': ' Get Act Profile    '},
     'sap' : {'func': pr.setActiveProfile, 'parm': profDict,                          'menu': ' Set Act Profile    '},
     'rap' : {'func': pr.runActiveProfile, 'parm': [rlyGPIoObjLst,gpioDict,profDict], 'menu': ' Run Act Profile \n '},
 
-    'gt'  : {'func': tr.getTimeDate,      'parm': None,                              'menu': ' Get     Time       '},
+    'gdt' : {'func': tr.getTimeDate,      'parm': None,                              'menu': ' Get     Date/Time  '},
+    'gt'  : {'func': ur.getTemp,          'parm': None,                              'menu': ' Get     CPU Temp   '},
+    'gv'  : {'func': ur.getVer,           'parm': None,                              'menu': ' Get     Version    '},
     }
 
     while(1):
-        choice = input( ' ***** Choice (m=menu, q=quit) -> ' )
+        choice = input( '\n ***** Choice (m=menu, q=quit) -> ' )
 
         if choice in strToFunctDict:
             function = strToFunctDict[choice]['func']
@@ -63,7 +68,6 @@ if __name__ == "__main__":
             print()
             for k in strToFunctDict.keys():
                 print('{:4} - {}'.format(k, strToFunctDict[k]['menu'] ))
-            print()
 
         elif choice == 'q':
             break

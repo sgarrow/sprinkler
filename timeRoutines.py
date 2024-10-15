@@ -37,7 +37,6 @@ def getTimeDate( parmLst, prnEn = True ):
         print(' minute {:4}'.format( minute ), end = '')
         print(' second {:4}'.format( second ))
         print(' dow    {:4} ({})'.format( dowNum, dowStr ))
-        print()
 
     rtnDict = {'year':   year,   'month':  month,  'day':   day,
                'hour':   hour,   'minute': minute, 'second':second,

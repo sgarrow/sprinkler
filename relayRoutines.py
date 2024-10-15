@@ -3,8 +3,8 @@ This module contains all the functions that talk directly to the relays.
 This is the only module that talks directly to the relays.
 
 This module has 6 functions 5 of which are callable directly from the prompt.
-Commands or,cr,tr,rr,cycr call functions openRelay, closeRelay, toggleRelay, 
-readRelay, respectively.
+Commands or,cr,tr,rr,cycr call functions openRelay, closeRelay, toggleRelay
+and readRelay, respectively.
 
 The 6th function (relayOCTR) is a driver for or,cr,tr,rr.  Those 4 functions
 (openRelay, closeRelay, toggleRelay, readRelay) are just thin wrappers to 
@@ -86,9 +86,9 @@ def cycleRelays( parmLst ):
                 relayNum = gpioDic[gpioStr]['relay']
             
                 rtnVal = closeRelay([relay_ObjLst,  gpioDic, [ii+1]])
-                time.sleep(1)
+                time.sleep(3)
                 rtnVal = openRelay( [relay_ObjLst,  gpioDic, [ii+1]])
-                time.sleep(1)
+                time.sleep(3)
 
     except KeyboardInterrupt:
         pass

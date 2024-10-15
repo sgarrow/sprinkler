@@ -24,12 +24,12 @@ Command mp: Calls function makeProfile.
             PC command prompt.
 
 Command lp: Calls function listProfiles.
-            This function prints the profiles (the data in the dictionary 
+            This function prints the profiles, the data in the dictionary 
             loaded at start up as described above.
          
 Command gap: Calls function getActiveProfile.
              This function prints the name of the active profile - 
-             the profile that will be run when the rp command is entered.
+             the profile that will be run when the rap command is entered.
              
 Command sap: Calls function setActiveProfile.
 
