@@ -123,7 +123,7 @@ def runActiveProfile( parmLst ):
     try:
         while 1:
 
-            currDT = tr.getTimeDate(None, False)
+            curDT = tr.getTimeDate(None, False)
 
             for relay,data in apDict.items():
                 if relay == 'active':
@@ -132,32 +132,49 @@ def runActiveProfile( parmLst ):
                 onDays    = data['Days']
                 onTimes   = data['Times']
                 durations = data['durations'] 
-                print(relay, onDays, onTimes, durations)
+                print('',relay, onDays, onTimes, durations)
 
-                dayMatch = False
+                dayMatch  = False
+                timeMatch = False
+
                 if 'all' in onDays                        or \
-                'even' in onDays and currDT['day']%2 == 0 or \
-                'odd'  in onDays and currDT['day']%2 == 1 or \
-                currDT['dowStr'] in onDays:
+                'even' in onDays and curDT['day']%2 == 0 or \
+                'odd'  in onDays and curDT['day']%2 == 1 or \
+                curDT['dowStr'] in onDays:
                     dayMatch = True
-                print( ' day match  = ', dayMatch)
 
-                inOnWindow = False
                 if dayMatch:
+
+                    print('   {:20} {:20} {:20} {:20}'.format( 'onTime', 'now', 'offTime', 'inWindow'))
+
                     for t,d in zip(onTimes,durations):
+
                         onTime = dt.datetime(
-                            currDT['year'], currDT['month'], currDT['day'], 
+                            curDT['year'], curDT['month'], curDT['day'], 
                             t//100, t%100, 0)
+
                         offTime = onTime + dt.timedelta(seconds = d*60)
-                        print(' onTime     = ', onTime)
-                        print(' now        = ', currDT['now'])
-                        print(' offTime    = ', offTime)
 
-                        if onTime <= currDT['now'] <= offTime:
-                            inOnWindow = True
-                print(' inOnWindow = ', inOnWindow)
+                        tempTimeMatch = False
+                        if onTime <= curDT['now'] <= offTime: 
+                            tempTimeMatch = True
 
-                if inOnWindow:
+                        onT='{}'.format(onTime.isoformat(      timespec='seconds'))
+                        cDT='{}'.format(curDT['now'].isoformat(timespec='seconds'))
+                        ofT='{}'.format(offTime.isoformat(     timespec='seconds'))
+
+                        print('   {:20}'.format( onT ),end = '')
+                        print(' {:20}'.format( cDT ),end = '')
+                        print(' {:20}'.format( ofT ),end = '')
+                        print(' {}'.format( tempTimeMatch ))
+
+                        if tempTimeMatch:
+                            timeMatch = True
+
+                print( '   day  match = ', dayMatch   )
+                print( '   time match = ', timeMatch  )
+
+                if timeMatch:
                     relayState = rr.readRelay([relay_ObjLst,gpioDic,[relayNum]])
                     if relayState == 'open':
                         rtnVal = rr.closeRelay([relay_ObjLst,gpioDic,[relayNum]] )

@@ -10,7 +10,7 @@ be opened or closed ... rap is the whole point of this project ...
 The infinite can be exited with ctrl-c.
 '''
 
-import datetime      as dt
+import datetime as dt
 
 def getTimeDate( parmLst, prnEn = True ):
     now = dt.datetime.now()

@@ -32,6 +32,23 @@ profile2:
     False
   relay1:
     Days:
+      - none
+  
+    Times:
+      - 800
+      - 1000
+      - 1700
+  
+    durations:
+      - 1
+      - 1
+      - 1
+############################################
+profile3:
+  active:
+    False
+  relay1:
+    Days:
       - even      # Legal values: even, odd, all, list-of-specific-days.
   
     Times:        # Time(s) of day the relay will close.
