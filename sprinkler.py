@@ -57,11 +57,26 @@ if __name__ == "__main__":
     }
 
     while(1):
-        choice = input( '\n ***** Choice (m=menu, q=quit) -> ' )
+        inputStr = input( '\n ***** Choice (m=menu, q=quit) -> ' )
+
+        if inputStr == '': continue
+
+        inputWords = inputStr.split()
+        choice     = inputWords[0]
+        optArgsStr = inputWords[1:]
+        optArgs    = [ int(x) for x in optArgsStr ]
+
+        print( 'inputStr   = ', inputStr   )
+        print( 'inputWords = ', inputWords )
+        print( 'choice     = ', choice     )
+        print( 'optArgs    = ', optArgs    )
 
         if choice in strToFunctDict:
             function = strToFunctDict[choice]['func']
             params   = strToFunctDict[choice]['parm']
+            if choice in ['or','cr','rr','cycr'] and len(optArgs) > 0:
+                params[2] = optArgs
+
             rtnVal   = function(params)
 
         elif choice == 'm':
