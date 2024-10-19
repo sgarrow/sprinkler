@@ -1,7 +1,8 @@
 import gpiozero
+import utilRoutines as ur
 
-VERSION  = ' Version:  1.0'
-RELEASED = ' Released: 14-Oct-2024'
+VERSION  = ' Version:  1.1'
+RELEASED = ' Released: 18-Oct-2024'
 #############################################################################
 
 def getTemp(prmLst):
@@ -15,5 +16,33 @@ def getVer(prmLst):
     print(VERSION)
     print(RELEASED)
     return VERSION, RELEASED
+#############################################################################
+
+def verifyRelayArgs( optArgsStr ):
+    
+    # Make sure all the optArgs are ints. If not a prompt (in relayOCTR) will
+    # occur.  1 2 3 works, 1 2 X will prompt.
+    try:
+        optArgs1 = [ int(x) for x in optArgsStr ]
+    except:
+        optArgs1 = []
+    
+    # Split any integers > 10 into digits. 123 works, becomes 1 2 3.
+    optArgs2 = []
+    for el in optArgs1:
+        if el > 10:
+            digits = [int(d) for d in str(el)]
+            optArgs2.extend(digits)
+        else:
+            optArgs2.append(el)
+
+    # Remove dups and nums out of range
+    optArgsNoDups = list(set(optArgs2))
+    optArgsNoGT8LE0  = [ x for x in optArgsNoDups if 0 < x < 9 ]
+
+    # Sort so the relays will be read in numerical order.
+    optArgsSorted = sorted(optArgsNoDups)
+
+    return sorted(optArgsNoGT8LE0)
 #############################################################################
 
