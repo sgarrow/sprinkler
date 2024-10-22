@@ -31,7 +31,7 @@ if __name__ == "__main__":
 
     print(' Starting program ...\n')
     ur.getVer(None)
-    ur.getTemp(None)
+    #ur.getTemp(None)
 
     gpioDict, rlyGPIoObjLst = ir.init()
 

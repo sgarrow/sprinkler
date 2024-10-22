@@ -1,14 +1,26 @@
 import gpiozero
+import os
 import utilRoutines as ur
 
-VERSION  = ' Version:  1.1'
-RELEASED = ' Released: 18-Oct-2024'
+VERSION  = ' Version:  1.2'
+RELEASED = ' Released: 21-Oct-2024'
 #############################################################################
 
 def getTemp(prmLst):
+
     cpu = gpiozero.CPUTemperature()
-    print(' CPU Temp  = {}'.format(cpu.temperature))
+    print(' CPU  Temp = {}'.format(cpu.temperature))
     print(' Over Temp = {}'.format(cpu.is_active))
+
+    print()
+    os.system('vcgencmd get_throttled')
+    print('  0: under-voltage')
+    print('  1: arm frequency capped')
+    print('  2: currently throttled ')
+    print(' 16: under-voltage has occurred')
+    print(' 17: arm frequency capped has occurred')
+    print(' 18: throttling has occurred')
+
     return cpu
 #############################################################################
 

@@ -96,7 +96,29 @@ def getActiveProfile( pDict ):
 
 def setActiveProfile( pDict ):
 
-    ap = input(' Active Profile -> ')
+    idxs = []
+    ks   = []
+    for ii,profileKey in enumerate(pDict):
+        print(' {} - {}'.format(ii,profileKey))
+        idxs.append(ii)
+        ks.append(profileKey)
+    print()
+
+    idx = None
+    while idx not in range(len(pDict)):
+        try:
+            idxStr = input(' Enter number of desired Active Profile (or \'q\') -> ')
+            idx = int(idxStr)
+        except:
+            if idxStr == 'q':
+                return -1
+            print(' Invalid entry. Must be an integer. Try again.')
+        else:
+            if idx > len(pDict):
+                idx = None
+                print(' Invalid entry. Integer out of range. Try again.')
+
+    ap = ks[idx]
 
     for profileKey,profileValue in pDict.items():
         for profKey,profValue in profileValue.items():
