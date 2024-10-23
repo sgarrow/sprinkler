@@ -29,31 +29,38 @@ import utilRoutines    as ur
 
 if __name__ == "__main__":
 
-    print(' Starting program ...\n')
+    print()
     ur.getVer(None)
-    #ur.getTemp(None)
 
     gpioDict, rlyGPIoObjLst = ir.init()
 
-    with open('schedDict.pickle', 'rb') as handle:
-        profDict = pickle.load(handle)
+    try:
+        handle = open('schedDict.pickle', 'rb')
+    except:
+        print('\n Could not open schedDict.pickle.')
+        print(' Generating it now ...\n')
+        pr.makeProfile(None)
+        handle = open('schedDict.pickle', 'rb')
+    profDict = pickle.load(handle)
+    handle.close()
 
+    allRlys = [1,2,3,4,5,6,7,8]
     strToFunctDict = {
-    'or'  : {'func': rr.openRelay,        'parm': [rlyGPIoObjLst,gpioDict,None],     'menu': ' Open    Relay      '},
-    'cr'  : {'func': rr.closeRelay,       'parm': [rlyGPIoObjLst,gpioDict,None],     'menu': ' Close   Relay      '},
-    'tr'  : {'func': rr.toggleRelay,      'parm': [rlyGPIoObjLst,gpioDict,None],     'menu': ' Toggle  Relay      '},
-    'rr'  : {'func': rr.readRelay,        'parm': [rlyGPIoObjLst,gpioDict,None],     'menu': ' Read    Relay      '},
-    'cycr': {'func': rr.cycleRelays,      'parm': [rlyGPIoObjLst,gpioDict,None],     'menu': ' Cycle   Relays \n  '},
+    'or'  : {'func': rr.openRelay,        'parm': [rlyGPIoObjLst,gpioDict,None   ], 'menu': ' Open    Relay    '},
+    'cr'  : {'func': rr.closeRelay,       'parm': [rlyGPIoObjLst,gpioDict,None   ], 'menu': ' Close   Relay    '},
+    'tr'  : {'func': rr.toggleRelay,      'parm': [rlyGPIoObjLst,gpioDict,None   ], 'menu': ' Toggle  Relay    '},
+    'rr'  : {'func': rr.readRelay,        'parm': [rlyGPIoObjLst,gpioDict,allRlys], 'menu': ' Read    Relay    '},
+    'cycr': {'func': rr.cycleRelays,      'parm': [rlyGPIoObjLst,gpioDict,None   ], 'menu': ' Cycle   Relays\n '},
 
-    'mp'  : {'func': pr.makeProfile,      'parm': None,                              'menu': ' Make    Profiles   '},
-    'lp'  : {'func': pr.listProfiles,     'parm': profDict,                          'menu': ' List    Profiles   '},
-    'gap' : {'func': pr.getActiveProfile, 'parm': profDict,                          'menu': ' Get Act Profile    '},
-    'sap' : {'func': pr.setActiveProfile, 'parm': profDict,                          'menu': ' Set Act Profile    '},
-    'rap' : {'func': pr.runActiveProfile, 'parm': [rlyGPIoObjLst,gpioDict,profDict], 'menu': ' Run Act Profile \n '},
+    'mp'  : {'func': pr.makeProfile,      'parm': None,                             'menu': ' Make    Profiles '},
+    'lp'  : {'func': pr.listProfiles,     'parm': profDict,                         'menu': ' List    Profiles '},
+    'gap' : {'func': pr.getActiveProfile, 'parm': profDict,                         'menu': ' Get Act Profile  '},
+    'sap' : {'func': pr.setActiveProfile, 'parm': profDict,                         'menu': ' Set Act Profile  '},
+    'rap' : {'func': pr.runActiveProfile, 'parm': [rlyGPIoObjLst,gpioDict,profDict],'menu': ' Run Act Profile\n'},
 
-    'gdt' : {'func': tr.getTimeDate,      'parm': None,                              'menu': ' Get     Date/Time  '},
-    'gt'  : {'func': ur.getTemp,          'parm': None,                              'menu': ' Get     CPU Temp   '},
-    'gv'  : {'func': ur.getVer,           'parm': None,                              'menu': ' Get     Version    '},
+    'gdt' : {'func': tr.getTimeDate,      'parm': None,                             'menu': ' Get     Date/Time'},
+    'gt'  : {'func': ur.getTemp,          'parm': None,                             'menu': ' Get     CPU Temp '},
+    'gv'  : {'func': ur.getVer,           'parm': None,                             'menu': ' Get     Version  '},
     }
 
     while(1):
@@ -84,6 +91,6 @@ if __name__ == "__main__":
         elif choice == 'q':
             break
 
-    rtnVal = rr.openRelay([rlyGPIoObjLst,gpioDict,[1,2,3,4,5,6,7,8]])
+    rtnVal = rr.openRelay([rlyGPIoObjLst,gpioDict,allRlys])
 
     print('\n Exiting application. \n')

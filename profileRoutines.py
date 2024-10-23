@@ -11,7 +11,7 @@ This module has 5 funcs all of which are callable directly from the prompt.
 
 Command mp: Calls function makeProfile.
             This function reads config.yml and converts the text therein into
-            a python "dictionary" (a dictionary is directly useable by the 
+            a python "dictionary" A dictionary is directly useable by the 
             python programming language whereas the text file itself 
             (config.yml) is not.  The resulting dictionary is saved to a 
             binary file named schedDict.pickle.
@@ -42,6 +42,7 @@ import pprint        as pp
 import datetime      as dt
 import relayRoutines as rr
 import timeRoutines  as tr
+import utilRoutines  as ur
 import pickle
 import time
 import yaml
@@ -96,6 +97,7 @@ def getActiveProfile( pDict ):
 
 def setActiveProfile( pDict ):
 
+    # Print a menu of available profiles.
     idxs = []
     ks   = []
     for ii,profileKey in enumerate(pDict):
@@ -104,6 +106,7 @@ def setActiveProfile( pDict ):
         ks.append(profileKey)
     print()
 
+    # Get the index of the desired profle from user (with error traping).
     idx = None
     while idx not in range(len(pDict)):
         try:
@@ -113,13 +116,13 @@ def setActiveProfile( pDict ):
             if idxStr == 'q':
                 return -1
             print(' Invalid entry. Must be an integer. Try again.')
-        else:
+        else: # There was no exception.
             if idx > len(pDict):
                 idx = None
                 print(' Invalid entry. Integer out of range. Try again.')
+    ap = ks[idx] # Name of the profile to set active.
 
-    ap = ks[idx]
-
+    # Set all profiles to inactive, except selected profile is set to active.
     for profileKey,profileValue in pDict.items():
         for profKey,profValue in profileValue.items():
             if profKey == 'active':
@@ -153,8 +156,9 @@ def runActiveProfile( parmLst ):
                 relayNum = int(relay[-1])
                 onDays    = data['Days']
                 onTimes   = data['Times']
-                durations = data['durations'] 
-                print('',relay, onDays, onTimes, durations)
+                durations = data['durations']
+                cpuInfo   = ur.getTemp([],False) 
+                print('',relay, onDays, onTimes, durations, cpuInfo.temperature)
 
                 dayMatch  = False
                 timeMatch = False
@@ -194,7 +198,8 @@ def runActiveProfile( parmLst ):
                             timeMatch = True
 
                 print( '   day  match = ', dayMatch   )
-                print( '   time match = ', timeMatch  )
+                if dayMatch:
+                    print( '   time match = ', timeMatch  )
 
                 if timeMatch:
                     relayState = rr.readRelay([relay_ObjLst,gpioDic,[relayNum]])
