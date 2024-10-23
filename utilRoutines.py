@@ -3,7 +3,7 @@ import os
 import utilRoutines as ur
 
 VERSION  = ' Version:  1.4'
-RELEASED = ' Released: 23-Oct-2024 '
+RELEASED = ' Released: 23-Oct-2024'
 #############################################################################
 
 def getTemp(prmLst, prnEn = True):
