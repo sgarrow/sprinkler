@@ -136,6 +136,10 @@ def setActiveProfile( pDict ):
 
 def runActiveProfile( parmLst ):
 
+    ESC = '\x1b'
+    RED = '[31m'
+    TERMINATE = '[0m'
+
     relay_ObjLst = parmLst[0] # For access to relay methods.
     gpioDic      = parmLst[1] # For print Statements (pin, gpio, .. )
     pDict        = parmLst[2] # profile dict
@@ -197,9 +201,9 @@ def runActiveProfile( parmLst ):
                         if tempTimeMatch:
                             timeMatch = True
 
-                print( '   day  match = ', dayMatch   )
+                print( '   day  match = {}{}{}'.format( ESC+RED, dayMatch, ESC+TERMINATE ))
                 if dayMatch:
-                    print( '   time match = ', timeMatch  )
+                    print( '   time match = {}{}{}'.format( ESC+RED, timeMatch, ESC+TERMINATE ))
 
                 if timeMatch:
                     relayState = rr.readRelay([relay_ObjLst,gpioDic,[relayNum]])

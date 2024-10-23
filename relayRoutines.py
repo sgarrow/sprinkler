@@ -17,6 +17,10 @@ import utilRoutines as ur
 
 def relayOCTR( parmLst ): # Relay Open/Close/Toggle/Read Driver Function.
 
+    ESC = '\x1b'
+    RED = '[31m'
+    TERMINATE = '[0m'
+
     relay_ObjLst = parmLst[0] # This was created by function in file init.py
     gpioDic      = parmLst[1] # Also from init.py, refer to comments therein.
     relayObjIdxs = parmLst[2] # A list of relays to perform the action on.
@@ -32,9 +36,10 @@ def relayOCTR( parmLst ): # Relay Open/Close/Toggle/Read Driver Function.
     
     whoCalledMeFuncNameStr = inspect.stack()[1][3]
     for relay in relays:
-        gpioStr  = str(relay.pin)
-        pinNum   = gpioDic[gpioStr]['pin'] 
-        relayNum = gpioDic[gpioStr]['relay']
+        gpioStr   = str(relay.pin)
+        pinNum    = gpioDic[gpioStr]['pin'] 
+        relayNum  = gpioDic[gpioStr]['relay']
+        relayDesc = gpioDic[gpioStr]['desc']
     
         if whoCalledMeFuncNameStr == 'openRelay':
             print(' Opening relay {} ({:6} on pin {}).'.format(relayNum, gpioStr, pinNum))
@@ -50,7 +55,8 @@ def relayOCTR( parmLst ): # Relay Open/Close/Toggle/Read Driver Function.
             rv = relay.value
             if rv == 1:
                 rtnVal = 'closed'
-            print(' Reading relay {} ({:6} on pin {}) is {}.'.format(relayNum, gpioStr, pinNum, rtnVal))
+            print(' Reading relay {} ({:6} on pin {}) is {}{:6}{} ({}).'.\
+                format(relayNum, gpioStr, pinNum, ESC+RED ,rtnVal, ESC+TERMINATE ,relayDesc))
     return rtnVal
 #############################################################################
 

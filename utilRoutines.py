@@ -2,8 +2,8 @@ import gpiozero
 import os
 import utilRoutines as ur
 
-VERSION  = ' Version:  1.3'
-RELEASED = ' Released: 22-Oct-2024'
+VERSION  = ' Version:  1.4'
+RELEASED = ' Released: 23-Oct-2024'
 #############################################################################
 
 def getTemp(prmLst, prnEn = True):
