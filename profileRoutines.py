@@ -70,7 +70,8 @@ def listProfiles( pDict ):
         for theKey,data in sched.items():
             print('  ', theKey, end = '')
             if theKey.startswith('relay'):
-                print('  Days: {}, Times: {}, Durations: {}'.\
+                print(' {}'.format(data['About']))
+                print('          Days: {}, Times: {}, Durations: {}\n'.\
                     format(data['Days'], data['Times'], data['durations']))
             else:
                 print(' ',data)
@@ -155,7 +156,7 @@ def runActiveProfile( parmLst ):
             curDT = tr.getTimeDate(None, False)
 
             for relay,data in apDict.items():
-                if relay == 'active':
+                if relay == 'active' or relay == 'about':
                     continue
                 relayNum = int(relay[-1])
                 onDays    = data['Days']

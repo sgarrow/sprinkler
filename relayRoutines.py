@@ -39,7 +39,6 @@ def relayOCTR( parmLst ): # Relay Open/Close/Toggle/Read Driver Function.
         gpioStr   = str(relay.pin)
         pinNum    = gpioDic[gpioStr]['pin'] 
         relayNum  = gpioDic[gpioStr]['relay']
-        relayDesc = gpioDic[gpioStr]['desc']
     
         if whoCalledMeFuncNameStr == 'openRelay':
             print(' Opening relay {} ({:6} on pin {}).'.format(relayNum, gpioStr, pinNum))
@@ -55,8 +54,8 @@ def relayOCTR( parmLst ): # Relay Open/Close/Toggle/Read Driver Function.
             rv = relay.value
             if rv == 1:
                 rtnVal = 'closed'
-            print(' Reading relay {} ({:6} on pin {}) is {}{:6}{} ({}).'.\
-                format(relayNum, gpioStr, pinNum, ESC+RED ,rtnVal, ESC+TERMINATE ,relayDesc))
+            print(' Reading relay {} ({:6} on pin {}) is {}{}{}.'.\
+                format(relayNum, gpioStr, pinNum, ESC+RED ,rtnVal, ESC+TERMINATE))
     return rtnVal
 #############################################################################
 

@@ -2,7 +2,7 @@ import gpiozero
 import os
 import utilRoutines as ur
 
-VERSION  = ' Version:  1.4'
+VERSION  = ' Version:  1.5'
 RELEASED = ' Released: 23-Oct-2024'
 #############################################################################
 
