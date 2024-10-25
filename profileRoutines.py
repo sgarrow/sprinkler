@@ -66,15 +66,18 @@ def makeProfile( prmLst ):
 def listProfiles( pDict ):
     print()
     for profile,sched in pDict.items():
-        print('',profile)
+        print(' {}'.format(profile))
+        print('  About   {}'.format(sched['about']))
+        print('  Active  {}\n'.format(sched['active']))
+
         for theKey,data in sched.items():
-            print('  ', theKey, end = '')
+
             if theKey.startswith('relay'):
-                print(' {}'.format(data['About']))
+                print('  {:<6}'.format(theKey), end = '')
+                print('  {}'.format(data['About']))
                 print('          Days: {}, Times: {}, Durations: {}\n'.\
                     format(data['Days'], data['Times'], data['durations']))
-            else:
-                print(' ',data)
+
         print()
 #############################################################################
 
@@ -163,7 +166,8 @@ def runActiveProfile( parmLst ):
                 onTimes   = data['Times']
                 durations = data['durations']
                 cpuInfo   = ur.getTemp([],False) 
-                print('',relay, onDays, onTimes, durations, cpuInfo.temperature)
+                print(' {} {} {} {} ( Temp = {:.1f}{}C )'.\
+                    format(relay, onDays, onTimes, durations, cpuInfo.temperature, chr(176)))
 
                 dayMatch  = False
                 timeMatch = False

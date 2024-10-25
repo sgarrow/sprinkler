@@ -54,7 +54,7 @@ def relayOCTR( parmLst ): # Relay Open/Close/Toggle/Read Driver Function.
             rv = relay.value
             if rv == 1:
                 rtnVal = 'closed'
-            print(' Reading relay {} ({:6} on pin {}) is {}{}{}.'.\
+            print(' Relay {} ({:6} on pin {}) is {}{}{}.'.\
                 format(relayNum, gpioStr, pinNum, ESC+RED ,rtnVal, ESC+TERMINATE))
     return rtnVal
 #############################################################################

@@ -40,21 +40,21 @@ profile1:
     Days:      [None]
     Times:     [None]
     durations: [None]
-  relay6:
-    About:     NC - 24V Ready 
-    Days:      [None]
-    Times:     [None]
-    durations: [None]
-  relay7:
-    About:     NC
-    Days:      [None]
-    Times:     [None]
-    durations: [None]
-  relay8:
-    About:     NC
-    Days:      [None]
-    Times:     [None]
-    durations: [None]
+  #relay6:
+  #  About:     NC - 24V Ready 
+  #  Days:      [None]
+  #  Times:     [None]
+  #  durations: [None]
+  #relay7:
+  #  About:     NC
+  #  Days:      [None]
+  #  Times:     [None]
+  #  durations: [None]
+  #relay8:
+  #  About:     NC
+  #  Days:      [None]
+  #  Times:     [None]
+  #  durations: [None]
 ############################################
 profile2:
   active:      False

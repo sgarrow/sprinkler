@@ -86,7 +86,7 @@ if __name__ == "__main__":
         elif choice == 'm':
             print()
             for k in strToFunctDict.keys():
-                print('{:4} - {}'.format(k, strToFunctDict[k]['menu'] ))
+                print(' {:4} - {}'.format(k, strToFunctDict[k]['menu'] ))
 
         elif choice == 'q':
             break
